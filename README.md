@@ -1,6 +1,6 @@
 # Dashboard Automação de Sensores - Senai
 
-![Sensor Dashboard](link_para_uma_imagem)
+![Sensor Dashboard](https://sp.senai.br/images/senai.svg)
 
 Sistema de monitoramento em tempo real para automação de sensores. Utiliza Arduino com sensor LM235 para coleta de dados de temperatura, produção e vibração. O dashboard dinâmico e escalonável foi criado com Django.
 
