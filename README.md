@@ -4,6 +4,8 @@
 
 Sistema de monitoramento em tempo real para automação de sensores. Utiliza Arduino com sensor LM235 para coleta de dados de temperatura, produção e vibração. O dashboard dinâmico e escalonável foi criado com Django.
 
+![Painel Dashboard](https://i.imgur.com/prEK7P3.png)
+
 ## Desenvolvedores 🚀
 - **Rafael Luiz Belentani**
 - **Jefferson Savidotti**
