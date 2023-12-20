@@ -7,48 +7,69 @@ from matplotlib.figure import Figure
 import base64
 from io import BytesIO
 from django.http import JsonResponse
-from .models import TemperatureData
+from datetime import datetime
+from .models import TemperatureData, ProductionData
 
-
-
-def fetch_external_temperature():
-    url = 'http://192.168.239.33' #Adicione o url do site com as informações http://192.168.239.33
+def fetch_external_data():
+    url = 'https://www.worldometers.info/pt/' # Adicione o URL do servidor 
 
     # Enviar uma requisição GET para obter o conteúdo da página
     response = requests.get(url)
-
-    # Imprimir o conteúdo da resposta para análise
-    print(response.text)
 
     # Verificar se a requisição foi bem-sucedida
     if response.status_code == 200:
         soup = BeautifulSoup(response.text, 'html.parser')
 
-        # Ajuste da classe para encontrar o elemento correto no HTML
-        temperature_element = soup.find('') # h1
+        # Encontrar o elemento que contém a temperatura
+        temperature_element = soup.find('h1')
+        
+        # Encontrar o elemento que contém o número de produção
+        production_element = soup.find('h2')
+        
+        # Extrair os valores numéricos da temperatura e número de produção
+        temperature, production = None, None
 
         if temperature_element:
-            # Extrair apenas o valor numérico da temperatura
             temperature_text = temperature_element.text.split(': ')[1].split(' ')[0]
-            
-            # Tentar converter o valor para float
             try:
-                temperature_float = float(temperature_text)
-                return temperature_float
+                temperature = float(temperature_text)
             except ValueError as e:
                 print(f"Error converting temperature to float: {e}")
 
-    return None
+        if production_element:
+            production_text = production_element.text.strip()
+            try:
+                production = int(production_text)
+            except ValueError as e:
+                print(f"Error converting production to int: {e}")
+
+        return temperature, production
+
+    return None, None
 
 def save_temperature(request):
     if request.method == 'POST':
         temperature_value = request.POST.get('temperature')
-        if temperature_value is not None:
-            TemperatureData.objects.create(temperature=float(temperature_value))
-        return JsonResponse({'status': 'success'})
+        production_value = request.POST.get('production')
+
+        if temperature_value is not None and production_value is not None:
+            # Obtém a data e hora atual
+            current_timestamp = datetime.now()
+
+            # Cria uma nova instância de TemperatureData e ProductionData e salva no banco de dados
+            TemperatureData.objects.create(
+                timestamp=current_timestamp,
+                temperature=float(temperature_value),
+            )
+
+            ProductionData.objects.create(
+                timestamp=current_timestamp,
+                production=float(production_value),
+            )
+            
+            return JsonResponse({'status': 'success'})
+    
     return JsonResponse({'status': 'error'})
-
-
 
 def generate_temperature_chart(timestamps, temperatures):
     fig, ax = plt.subplots()
@@ -60,8 +81,32 @@ def generate_temperature_chart(timestamps, temperatures):
 
     return fig
 
+def get_temperature_history(request):
+    # Obtém os últimos 6 registros do banco de dados ordenados por timestamp
+    temperature_history = TemperatureData.objects.order_by('-timestamp')[:6]
+
+    # Formata os dados para serem enviados como resposta JSON
+    data = {
+        'timestamps': [entry.timestamp.strftime('%b') for entry in temperature_history],
+        'temperatures': [entry.temperature for entry in temperature_history],
+    }
+
+    return JsonResponse(data)
+
+def get_production_history(request):
+    # Obtains the latest 6 records from the database ordered by timestamp
+    production_history = ProductionData.objects.order_by('-timestamp')[:6]
+
+    # Formats the data to be sent as a JSON response
+    data = {
+        'timestamps': [entry.timestamp.strftime('%b') for entry in production_history],
+        'productions': [entry.production for entry in production_history],
+    }
+
+    return JsonResponse(data)
+
 def dashboard(request):
-    external_temperature = fetch_external_temperature()
+    external_temperature, production = fetch_external_data()
     
     if external_temperature is not None:
         # Aqui você pode salvar a temperatura externa no banco de dados ou utilizá-la conforme necessário
@@ -85,7 +130,16 @@ def dashboard(request):
     # Passa a imagem base64 para o template
     context = {
         'temperatura_externa': external_temperature,
+        'production': production,
         'graph_html': image_base64,
     }
-
     return render(request, 'dashboard/dashboard.html', context)
+
+def home(request):
+    return render(request, 'dashboard/home.html')
+    
+def sobre(request):
+    return render(request, 'dashboard/sobre.html')
+    
+def contatos(request):
+    return render(request, 'dashboard/contatos.html')

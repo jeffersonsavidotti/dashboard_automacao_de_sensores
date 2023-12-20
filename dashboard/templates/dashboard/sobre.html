@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="refresh" content="2" />
+  <title>Senai Sensores - Sobre</title>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+  <!-- Adicione a biblioteca jQuery -->
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <!-- Plotly JavaScript -->
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <style>
+    /* Adicione estilos personalizados aqui se necessário */
+    body {
+      background-color: #f8f9fa;
+    }
+
+    .navbar {
+      background-color: #007bff;
+    }
+
+    .navbar-dark .navbar-brand,
+    .navbar-dark .navbar-nav .nav-link {
+      color: #ffffff;
+    }
+
+    #dashboard-container {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      margin-top: 80px;
+      margin-bottom: 80px;
+    }
+
+    h1 {
+      color: #007bff;
+    }
+
+    h2 {
+      color: #343a40;
+    }
+
+    .main-card {
+      margin-bottom: 20px;
+      border: none;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .card {
+      margin-bottom: 20px;
+      border: none;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-body {
+      padding: 20px;
+    }
+
+    .card-title {
+      font-size: 1.5rem;
+      color: #007bff;
+    }
+
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    ul li {
+      margin-bottom: 5px;
+    }
+
+    footer {
+      background-color: #343a40;
+      color: #ffffff;
+      padding: 20px 0;
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-md navbar-dark fixed-top">
+    <a class="navbar-brand" href="#">Senai Sensores</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
+      aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item active">
+          <a class="nav-link" href="{% url 'home' %}">Início</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'dashboard' %}">Painel de Controle</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'sobre' %}">Sobre</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'contatos' %}">Contato</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div id="dashboard-container">
+    <h1>DASHBOARD SISTEMA EMBARCADO</h1>
+    <p>ESCOLA SENAI HENRIQUE LUPO – 2023 - ARARAQUARA</p>
+    <p>Dashboard é um painel que fornece visualizações rápidas de informações ou indicadores para o funcionamento de uma Empresa ou Máquina.</p>
+    <p>Sistema Embarcado é um sistema eletrônico inserido em um dispositivo para desempenhar uma função.</p>
+
+    <div class="card main-card">
+      <div class="card-body">
+        <h class="card-title">Sobre</h1>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-body">
+                <h2 class="card-title">Equipamentos</h2>
+                <ul>
+                  <li>Microcontrolador ESP8266</li>
+                  <li>Sensor de Temperatura LM35</li>
+                  <li>Botão</li>
+                  <li>Buzzer</li>
+                  <li>Led</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-body">
+                <h2 class="card-title">Tecnologias e Frameworks</h2>
+                <ul>
+                  <li>Python</li>
+                  <li>Arduino IDE</li>
+                  <li>Django</li>
+                  <li>Pandas</li>
+                  <li>Plotly</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card main-card">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-body">
+                <h2 class="card-title">Projeto de Monitoramento</h2>
+                <p>O projeto se trata de um monitoramento em tempo real com um microcontrolador ESP8266 que utiliza sensores para captar informações como temperatura, vibração e produção de determinada máquina ou equipamento a fim de realizar um acompanhamento e sendo assim uma manutenção preventiva e até mesmo preditiva.</p>
+                <p>O Microcontrolador também é equipado com um led e um Buzzer para alertar quando alguma das leituras estiverem fora do padrão. Para a automatização programamos o microcontrolador com a plataforma Arduino IDE que utiliza como linguagem o C++, ele realiza as leituras em tempo real e envia para seu servidor web.</p>
+                <p>Para o monitoramento usamos o Django, uma interface de fácil compreensão, ele busca no servidor web as leituras dos sensores, armazena e realiza gráficos para acompanhar as leituras.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-body">
+                <h2 class="card-title">Dashboard Arduino IDE</h2>
+                <p>O projeto foi desenvolvido por Jefferson Savidotti e Rafael Luiz Belentani sob orientação técnica e didática do professor e competidor Bruno Tomas para o curso de programação em Python na escola Senai Henrique Lupo da cidade de Araraquara. O projeto foi finalizado e entregue no dia 23/12/2023.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card main-card">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-body">
+                <h2 class="card-title">Django</h2>
+                <p>O Django é um framework web de alto nível escrito em Python que incentiva o desenvolvimento rápido e o design limpo e pragmático. Ele é utilizado no projeto para criar uma interface de fácil compreensão, buscando no servidor web as leituras dos sensores, armazenando e gerando gráficos para acompanhar as leituras em tempo real.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-body">
+                <h2 class="card-title">Plotly</h2>
+                <p>Plotly é uma biblioteca de gráficos interativos em Python. No projeto, é utilizada para gerar gráficos que permitem visualizar as leituras dos sensores de forma mais intuitiva e compreensível.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card main-card">
+      <div class="card-body">
+        <h2 class="card-title">Pandas</h2>
+        <p>O Pandas é uma biblioteca Python que oferece estruturas de dados fáceis de usar e ferramentas de análise de dados. Ele é utilizado no projeto para manipular os dados provenientes dos sensores e facilitar a análise e geração de gráficos.</p>
+      </div>
+    </div>
+  </div>
+
+  <footer class="text-center">
+    <p>&copy; 2023 Senai Sensores. Todos os direitos reservados.</p>
+  </footer>
+</body>
+
+</html>

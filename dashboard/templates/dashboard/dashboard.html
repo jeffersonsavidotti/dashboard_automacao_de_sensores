@@ -1,184 +1,268 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="refresh" content="2"> 
-    <title>Senai Sensores - Painel de Controle de Temperatura</title>
-    <!-- Bootstrap CSS -->
-    <link
-      rel="stylesheet"
-      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-    />
-    <!-- Adicione a biblioteca jQuery -->
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <!-- Plotly JavaScript -->
-    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="refresh" content="2" />
+  <title>Senai Sensores - Painel de Controle de Sensores</title>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+  <!-- Adicione a biblioteca jQuery -->
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <!-- Plotly JavaScript -->
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
 
-    <style>
-      body {
-        background-color: #f8f9fa;
-      }
+    .navbar {
+      background-color: #007bff;
+    }
 
-      #dashboard-container {
-        background-color: #fff;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-        text-align: center;
-        margin-top: 80px;
-        margin-bottom: 80px;
-      }
+    .navbar-dark .navbar-nav .nav-link {
+      color: #ffffff;
+    }
 
-      h1 {
-        color: #007bff;
-      }
+    .navbar-dark .navbar-toggler-icon {
+      background-color: #ffffff;
+    }
 
-      h2 {
-        color: #343a40;
-      }
+    #dashboard-container {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      margin-top: 80px;
+      margin-bottom: 80px;
+    }
 
-      #temperature-chart {
-        max-width: 100%;
-        height: auto;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-      }
+    h1 {
+      color: #007bff;
+    }
 
-      p {
-        color: #6c757d;
-      }
+    h2 {
+      color: #343a40;
+    }
 
-      footer {
-        background-color: #343a40;
-        color: #ffffff;
-        padding: 20px 0;
-      }
+    .card {
+      margin-bottom: 20px;
+    }
 
-      .navbar {
-        background-color: #007bff;
-      }
+    .card-body {
+      padding: 20px;
+    }
 
-      .navbar-dark .navbar-nav .nav-link {
-        color: #ffffff;
-      }
+    #temperature-chart,
+    #production-chart {
+      max-width: 100%;
+      height: auto;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    }
 
-      .navbar-dark .navbar-toggler-icon {
-        background-color: #ffffff;
-      }
-    </style>
-  </head>
-  <body>
-    <nav class="navbar navbar-expand-md navbar-dark fixed-top">
-      <a class="navbar-brand" href="#">Senai Sensores</a>
-      <button
-        class="navbar-toggler"
-        type="button"
-        data-toggle="collapse"
-        data-target="#navbarCollapse"
-        aria-controls="navbarCollapse"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
-        <span class="navbar-toggler-icon"></span>
+    p {
+      color: #6c757d;
+    }
+
+    footer {
+      background-color: #343a40;
+      color: #ffffff;
+      padding: 20px 0;
+    }
+
+    #update-button {
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-md navbar-dark fixed-top">
+    <a class="navbar-brand" href="#">Senai Sensores</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
+      aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item active">
+          <a class="nav-link" href="{% url 'home' %}">Início</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'dashboard' %}">Painel de Controle</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'sobre' %}">Sobre</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'contatos' %}">Contato</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container mt-5">
+    <div id="dashboard-container">
+      <!-- Botão de Atualização -->
+      <button id="update-button" class="btn btn-primary" onclick="updateSensorData()">
+        Atualizar Informações
       </button>
-      <div class="collapse navbar-collapse" id="navbarCollapse">
-        <ul class="navbar-nav ml-auto">
-          <li class="nav-item active">
-            <a class="nav-link" href="#">Início</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Painel de Controle</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Sobre</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Contato</a>
-          </li>
-        </ul>
-      </div>
-    </nav>
 
-    <div class="container mt-5">
-      <div id="dashboard-container" class="card">
-        <h1 class="card-header">Painel de Controle de Temperatura</h1>
-        <h2 class="mb-4">
-          Bem-vindo ao futuro da automação em sensores industriais
-        </h2>
-        <div class="card-body">
-          <!-- Temperatura recebida do sensor -->
-          {% if temperatura_externa %}
-          <h2 id="current-temperature" class="mb-4">
-            Temperatura atual: {{ temperatura_externa }}°C
-          </h2>
-          {% endif %}
-    
-          <!-- Exibe o gráfico de temperatura Plotly -->
-          <div id="temperature-chart">
-            <img
-              src="data:image/png;base64,{{ graph_html }}"
-              alt="Gráfico de Temperatura"
-            />
+      <!-- Painel de Controle de Sensores -->
+      <div class="card">
+        <h1 class="card-header">Painel de Controle de Sensores</h1>
+        <div class="card-body d-flex justify-content-between">
+          <!-- Card de Temperatura -->
+          <div class="card" style="flex: 1; margin-right: 10px">
+            <h2 class="card-header">Temperatura</h2>
+            <div class="card-body">
+              <!-- Temperatura recebida do sensor -->
+              <h2 id="current-temperature" class="mb-4">
+                {% if temperatura_externa %} Temperatura atual: {{ temperatura_externa }}°C {% else %}
+                Aguardando dados de temperatura... {% endif %}
+              </h2>
+
+              <!-- Exibe o gráfico de temperatura Plotly -->
+              <div id="temperature-chart"></div>
+            </div>
+          </div>
+
+          <!-- Card de Produção -->
+          <div class="card" style="flex: 1; margin-left: 10px">
+            <h2 class="card-header">Produção</h2>
+            <div class="card-body">
+              <!-- Produção recebida do sensor -->
+              <h2 id="current-production" class="mb-4">
+                {% if production %} Produção atual: {{ production }} {% else %}
+                Aguardando dados de produção... {% endif %}
+              </h2>
+
+              <!-- Exibe o gráfico de produção Plotly (gráfico de barras) -->
+              <div id="production-chart"></div>
+            </div>
           </div>
         </div>
       </div>
     </div>
-    
-    <footer class="text-center">
-      <p>&copy; 2023 Senai Sensores. Todos os direitos reservados.</p>
-    </footer>
+  </div>
 
-    <!-- Atualize a temperatura a cada 1 segundo (1000 milissegundos) -->
+  <footer class="text-center">
+    <p>&copy; 2023 Senai Sensores. Todos os direitos reservados.</p>
+  </footer>
 
-    <script>
-      // Inicialize o histórico de temperaturas como vazio
-      var temperaturaHistorico = [];
-    
-      // Inicialize o gráfico Plotly
-      var temperatureChart = Plotly.newPlot("temperature-chart", [
-        {
-          x: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
-          y: temperaturaHistorico,
-          type: "line",
-          labels: { x: "Mês", y: "Temperatura (°C)" },
-          title: "Gráfico de Temperatura",
-        },
-      ]);
-    
-      // Atualize a temperatura a cada 1 segundo (1000 milissegundos)
-      function updateTemperature() {
-        $.get("http://192.168.239.33", function (data) {
-          // Atualize o conteúdo do elemento de temperatura
-          $("#current-temperature").text("Temperatura atual: " + data + "°C");
-    
-          // Adicione a nova temperatura ao histórico
-          temperaturaHistorico.push(parseFloat(data));
-    
-          // Mantenha apenas os últimos 6 valores no histórico
-          temperaturaHistorico = temperaturaHistorico.slice(-6);
-    
-          // Atualize o gráfico Plotly com o histórico de temperaturas
-          Plotly.update("temperature-chart", {
-            y: [temperaturaHistorico],
-          });
-    
-          // Salvar a temperatura no banco de dados
-          $.ajax({
-            url: "/save-temperature/",
-            type: "POST",
-            data: { temperature: data },
-            success: function () {
-              console.log("Temperatura salva com sucesso!");
-            },
-            error: function () {
-              console.error("Erro ao salvar a temperatura.");
-            },
-          });
+  <!-- Atualize a temperatura e produção a cada 1 segundo (1000 milissegundos) -->
+  <script>
+    // Inicialize o gráfico Plotly de temperatura
+    var temperatureChart = Plotly.newPlot("temperature-chart", [
+      {
+        x: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+        y: [0, 0, 0, 0, 0, 0], // Inicializa com valores vazios
+        type: "line",
+        labels: { x: "Mês", y: "Temperatura (°C)" },
+        title: "Gráfico de Temperatura",
+      },
+    ]);
+
+    // Inicialize o gráfico Plotly de produção (gráfico de barras)
+    var productionChart = Plotly.newPlot("production-chart", [
+      {
+        x: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+        y: [0, 0, 0, 0, 0, 0], // Inicializa com valores vazios
+        type: "bar",
+        labels: { x: "Mês", y: "Produção" },
+        title: "Gráfico de Produção",
+      },
+    ]);
+
+    // Função para obter e atualizar o histórico de temperatura
+    function fetchTemperatureHistory() {
+      axios.get("/get_temperature_history/")
+        .then(response => {
+          // Atualiza a variável temperaturaHistorico
+          var temperaturaHistorico = response.data.temperatures;
+
+          // Atualiza o gráfico Plotly
+          Plotly.update("temperature-chart", { y: [temperaturaHistorico] });
+        })
+        .catch(error => {
+          console.error('Erro ao obter o histórico de temperatura:', error);
         });
-      }
-    </script>
+    }
+
+    // Função para obter e atualizar o histórico de produção
+    function fetchProductionHistory() {
+      axios.get("/get_production_history/")
+        .then(response => {
+          // Atualiza a variável producaoHistorico
+          var producaoHistorico = response.data.production;
+
+          // Atualiza o gráfico Plotly
+          Plotly.update("production-chart", { y: [producaoHistorico] });
+        })
+        .catch(error => {
+          console.error('Erro ao obter o histórico de produção:', error);
+        });
+    }
+
+    // Função para atualizar os dados do sensor
+    function updateSensorData() {
+      $.get("https://www.worldometers.info/pt/", function (data) {
+        // Atualizar o conteúdo do elemento de temperatura
+        $("#current-temperature").text("Temperatura atual: " + data.temperature + "°C");
+
+        // Adicionar a nova temperatura ao histórico
+        var temperaturaHistorico = temperatureChart.data[0].y;
+        temperaturaHistorico.push(parseFloat(data.temperature));
+        temperaturaHistorico = temperaturaHistorico.slice(-6);
+
+        // Atualizar o gráfico Plotly de temperatura com o histórico
+        Plotly.update("temperature-chart", { y: [temperaturaHistorico] });
+
+        // Salvar a temperatura no banco de dados
+        $.ajax({
+          url: "/save-sensor-data/",
+          type: "POST",
+          data: {
+            temperature: data.temperature,
+            production: data.production,
+          },
+          success: function () {
+            console.log("Dados do sensor salvos com sucesso!");
+          },
+          error: function () {
+            console.error("Erro ao salvar os dados do sensor.");
+          },
+        });
+
+        // Exibir a produção se disponível
+        if (data.production !== undefined) {
+          // Atualizar o conteúdo do elemento de produção
+          $("#current-production").text("Produção atual: " + data.production);
+
+          // Adicionar a nova produção ao histórico
+          var producaoHistorico = productionChart.data[0].y;
+          producaoHistorico.push(parseFloat(data.production));
+          producaoHistorico = producaoHistorico.slice(-6);
+
+          // Atualizar o gráfico Plotly de produção com o histórico
+          Plotly.update("production-chart", { y: [producaoHistorico] });
+        }
+      });
+    }
+
+    // Chama a função para buscar o histórico de temperatura após a inicialização do gráfico
+    fetchTemperatureHistory();
+    // Chama a função para buscar o histórico de produção após a inicialização do gráfico
+    fetchProductionHistory();
+    // Chamar a função de atualização ao carregar a página
+    updateSensorData();
     
-  </body>
+    // Atualizar os dados a cada 1 segundo (1000 milissegundos)
+    setInterval(function () {
+      updateSensorData();
+    }, 1000);
+  </script>
+</body>
 </html>
